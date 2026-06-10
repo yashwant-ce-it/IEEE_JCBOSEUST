@@ -117,7 +117,7 @@ body, html {
   width: 100vw;
   height: 100vh;
   z-index: 1;
-  pointer-events: auto; /* allow raycast */
+  pointer-events: none; /* allow scroll fall-through; raycast via window listeners */
   transition: filter 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 

@@ -31,10 +31,8 @@
         }
       })();
       
-      // Determine if the device is low-tier (lack of WebGL, low concurrency, or mobile user agent)
+      // Determine if the device is low-tier (lack of WebGL support or explicit fallback parameter)
       var isLowTier = !hasWebGL || 
-                      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
-                      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                       window.location.search.indexOf('fallback=true') !== -1;
                       
       if (isLowTier) {

@@ -245,6 +245,7 @@
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('click', onCanvasClick);
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
   }
 
   // 6. Create Procedural Cyber Geometry
@@ -488,10 +489,10 @@
   }
 
   // 9. Canvas Interaction & Raycasting (Hover / Click meshes)
-  function onMouseMove(event) {
-    // Map normal mouse to normalized device coords (-1 to +1)
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  function handlePointerMove(clientX, clientY) {
+    // Map coords to normalized device coords (-1 to +1)
+    mouse.x = (clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(clientY / window.innerHeight) * 2 + 1;
     
     if (!isRendering) return;
 
@@ -500,7 +501,6 @@
     // We raycast against the first layer children of each zone group
     let intersects = [];
     interactiveObjects.forEach(group => {
-      // Test intersection against all meshes in the group
       const hits = raycaster.intersectObjects(group.children, true);
       if (hits.length > 0) {
         intersects.push({ group: group, hit: hits[0] });
@@ -530,6 +530,16 @@
       }
     } else {
       resetHover();
+    }
+  }
+
+  function onMouseMove(event) {
+    handlePointerMove(event.clientX, event.clientY);
+  }
+
+  function onTouchStart(event) {
+    if (event.touches && event.touches.length > 0) {
+      handlePointerMove(event.touches[0].clientX, event.touches[0].clientY);
     }
   }
 
