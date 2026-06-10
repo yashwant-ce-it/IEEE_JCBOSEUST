@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IEEE JCBUST | IEEE Student Branch JCBOSEUST</title>
+  
+  <!-- Meta Tags for SEO -->
+  <meta name="description" content="Explore IEEE JCBUST, an interactive 3D digital campus of the IEEE Student Branch JCBOSEUST. Discover and register for Tech-X, Invenio, and RoboClash.">
+  <meta name="keywords" content="IEEE, JCBOSEUST, JCBUST, Tech-X, Invenio, RoboClash, Hackathon, Robotics, WebGL, Three.js">
+  <meta name="author" content="IEEE Student Branch JCBOSEUST">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  
+  <!-- Vanilla CSS Stylesheet -->
+  <link rel="stylesheet" href="sytle.css?v=1.5">
+
+  <!-- Early Hardware Gating Script -->
+  <script>
+    (function() {
+      // Check WebGL availability
+      var hasWebGL = (function() {
+        try {
+          var canvas = document.createElement('canvas');
+          return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+        } catch (e) {
+          return false;
+        }
+      })();
+      
+      // Determine if the device is low-tier (lack of WebGL, low concurrency, or mobile user agent)
+      var isLowTier = !hasWebGL || 
+                      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+                      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                      window.location.search.indexOf('fallback=true') !== -1;
+                      
+      if (isLowTier) {
+        document.documentElement.classList.add('low-tier');
+        window.isLowTierDevice = true;
+        console.log("Hardware Gating: Low-tier device detected. Loading 2D static fallback UI.");
+      } else {
+        window.isLowTierDevice = false;
+        console.log("Hardware Gating: High-tier device detected. Initializing full WebGL IEEE JCBUST experience.");
+      }
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- CINEMATIC VIDEO PRELOADER (High-tier only; low-tier skips or loads instantly) -->
+  <div id="intro-container" class="flex-center">
+    <video
+      id="intro-video"
+      src="intro.mp4"
+      muted
+      playsinline
+      webkit-playsinline
+      autoplay
+      preload="auto"
+    ></video>
+    <button id="skip-intro-btn">SKIP INTRO</button>
+  </div>
+
+  <!-- MAIN WEBGL CANVAS CONTAINER -->
+  <canvas id="webgl-canvas"></canvas>
+
+  <!-- GLASSMORPHIC 2D DOM OVERLAY (Loaded dynamically) -->
+  <div id="app-container">
+    
+    <!-- NAVIGATION BAR -->
+    <header class="header">
+      <div class="nav-container">
+        <a href="#" class="logo font-cinzel" id="nav-logo" style="display: flex; align-items: center; gap: 12px;">
+          <img src="logo.jpg" alt="IEEE JCBOSEUST Logo" class="header-logo-img">
+          IEEE <span class="accent-text">JCBUST</span>
+        </a>
+        
+        <nav class="nav-links font-outfit">
+          <a href="#hero" class="nav-link active">Home</a>
+          <a href="about.html" class="nav-link">About Us</a>
+          <a href="#techx" class="nav-link">Tech-X</a>
+          <a href="#invenio" class="nav-link">Invenio</a>
+          <a href="#roboclash" class="nav-link">RoboClash</a>
+          <a href="mailto:yashwant89910b@gmail.com" class="nav-link">Contact Us</a>
+        </nav>
+        
+        <div class="nav-actions">
+          <button class="btn btn-primary font-outfit" id="nav-register-btn">REGISTER</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- SCROLL CONTENT (High-tier scroll engine drives this) -->
+    <div id="scroll-container">
+      
+      <!-- HERO SECTION -->
+      <section id="hero" class="scroll-section hero-section">
+        <div class="hero-content">
+          <h2 class="hero-tagline font-outfit uppercase tracking-widest text-glow">IEEE STUDENT BRANCH JCBOSEUST</h2>
+          <h1 class="hero-title font-cinzel">IEEE JCBUST</h1>
+          <p class="hero-desc font-outfit">IEEE Week 2026 is a week-long technical fest by IEEE YMCA Student Branch, designed to inspire innovation through workshops, challenges, and expert sessions. It provides a platform for students to learn, collaborate, and shape the future of technology.</p>
+          <div class="hero-buttons">
+            <a href="#techx" class="btn btn-secondary font-outfit">EXPLORE ZONES</a>
+            <button class="btn btn-primary font-outfit trigger-modal-general">REGISTER NOW</button>
+          </div>
+        </div>
+        <a href="#techx" class="scroll-indicator font-outfit">
+          <span>SCROLL TO ENTER</span>
+          <div class="mouse">
+            <div class="wheel"></div>
+          </div>
+        </a>
+      </section>
+
+      <!-- ZONE 1: TECH-X -->
+      <section id="techx" class="scroll-section zone-section">
+        <div class="glass-card zone-card left-card" id="card-techx">
+          <div class="card-header">
+            <span class="zone-badge font-outfit bg-red-dim border-red text-red">CODING & HACKATHONS</span>
+            <h2 class="zone-title font-cinzel text-glow-red">TECH-X</h2>
+          </div>
+          <div class="card-body font-outfit">
+            <p>Tech-X is the coding nexus of IEEE JCBUST. The digital arena where competitive programmers, software developers, and web architects construct solutions to global issues.</p>
+            <ul class="zone-specs">
+              <li><i data-lucide="code"></i> 24-Hour Code Sprint Hackathon</li>
+              <li><i data-lucide="terminal"></i> Competitive Coding Arena</li>
+              <li><i data-lucide="cpu"></i> Open Source Showdowns</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-red font-outfit open-reg-modal" data-zone="Tech-X">ENTER TECH-X / REGISTER</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ZONE 2: INVENIO -->
+      <section id="invenio" class="scroll-section zone-section">
+        <div class="glass-card zone-card right-card" id="card-invenio">
+          <div class="card-header">
+            <span class="zone-badge font-outfit bg-blue-dim border-blue text-blue">AI & INNOVATION</span>
+            <h2 class="zone-title font-cinzel text-glow-blue">INVENIO</h2>
+          </div>
+          <div class="card-body font-outfit">
+            <p>Invenio is the sanctuary for advanced research and developmental breakthroughs. Connect with Artificial Intelligence models, Internet of Things arrays, and innovative research papers.</p>
+            <ul class="zone-specs">
+              <li><i data-lucide="network"></i> AI & Deep Learning Symposia</li>
+              <li><i data-lucide="lightbulb"></i> Startup Ideation Bootcamp</li>
+              <li><i data-lucide="file-text"></i> IEEE Research Paper Presentations</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-blue font-outfit open-reg-modal" data-zone="Invenio">ENTER INVENIO / REGISTER</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ZONE 3: ROBOCLASH -->
+      <section id="roboclash" class="scroll-section zone-section">
+        <div class="glass-card zone-card left-card" id="card-roboclash">
+          <div class="card-header">
+            <span class="zone-badge font-outfit bg-green-dim border-green text-green">ROBOTICS & HARDWARE</span>
+            <h2 class="zone-title font-cinzel text-glow-green">ROBOCLASH</h2>
+          </div>
+          <div class="card-body font-outfit">
+            <p>RoboClash is the mechanical battlegrounds. A zone dedicated to hardware integration, microcontrollers, embedded electronics, and autonomous bots clashing in arena challenges.</p>
+            <ul class="zone-specs">
+              <li><i data-lucide="wrench"></i> Autonomous Line Follower Race</li>
+              <li><i data-lucide="swords"></i> Robo Sumo Wrestling Arena</li>
+              <li><i data-lucide="circuit-board"></i> Embedded System Projects</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-green font-outfit open-reg-modal" data-zone="RoboClash">ENTER ROBOCLASH / REGISTER</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="footer scroll-section">
+        <div class="footer-content font-outfit">
+          <div class="footer-logo font-cinzel">IEEE <span class="accent-text">JCBOSEUST</span></div>
+          <p class="footer-credit">Designed and Engineered for IEEE Student Branch JCBOSEUST &copy; 2026. All rights reserved.</p>
+          <p class="footer-email" style="margin-top: -0.5rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
+            For further details, email: <a href="mailto:yashwant89910b@gmail.com" class="accent-text" style="text-decoration: none;">yashwant89910b@gmail.com</a>
+          </p>
+          <div class="footer-socials">
+            <a href="#" class="social-icon"><i data-lucide="github"></i></a>
+            <a href="#" class="social-icon"><i data-lucide="linkedin"></i></a>
+            <a href="#" class="social-icon"><i data-lucide="instagram"></i></a>
+            <a href="#" class="social-icon"><i data-lucide="globe"></i></a>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- REGISTRATION MODAL CONTAINER (z-index: 100) -->
+  <div id="modal-container" class="flex-center hidden">
+    <div class="modal-backdrop"></div>
+    <div class="glass-card modal-card font-outfit animate-scale-up">
+      <button class="modal-close-btn" id="close-modal-btn">
+        <i data-lucide="x"></i>
+      </button>
+      
+      <div class="modal-header">
+        <div class="modal-subtitle tracking-widest text-dim">IEEE JCBUST EVENT PORTAL</div>
+        <h2 class="modal-title font-cinzel text-glow" id="modal-zone-title">ZONE: REGISTER</h2>
+      </div>
+      
+      <form id="registration-form" class="modal-form">
+        <!-- Hidden input to store selected zone -->
+        <input type="hidden" id="form-zone" name="zone" value="">
+        
+        <div class="form-group">
+          <label for="form-name">FULL NAME</label>
+          <input type="text" id="form-name" required placeholder="Enter your full name">
+        </div>
+        
+        <div class="form-group">
+          <label for="form-email">EMAIL ADDRESS</label>
+          <input type="email" id="form-email" required placeholder="name@university.edu">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="form-roll">ROLL NUMBER</label>
+            <input type="text" id="form-roll" required placeholder="e.g. 26CS101">
+          </div>
+          
+          <div class="form-group">
+            <label for="form-year">ACADEMIC YEAR</label>
+            <select id="form-year" required>
+              <option value="" disabled selected>Select Year</option>
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4th Year</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="form-event">CHOOSE SPECIFIC EVENT</label>
+          <select id="form-event" required>
+            <option value="" disabled selected>Select Event</option>
+            <!-- Will be dynamically populated based on selected zone -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="form-team">TEAM SIZE (IF APPLICABLE)</label>
+          <input type="number" id="form-team" min="1" max="4" value="1" placeholder="1-4 players">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block font-outfit font-bold btn-submit" id="submit-btn">
+          <span class="btn-text">TRANSMIT ENROLLMENT</span>
+          <span class="loader-spinner hidden"></span>
+        </button>
+      </form>
+      
+      <!-- SUCCESS SCREEN -->
+      <div id="modal-success-screen" class="hidden flex-center flex-column">
+        <div class="success-icon-wrapper green-pulse">
+          <i data-lucide="check" class="text-green"></i>
+        </div>
+        <h3 class="font-cinzel text-glow-green text-green success-title">TRANSMISSION SECURED</h3>
+        <p class="success-message">Your registration has been logged in the IEEE JCBUST database. An encryption key and event ticket have been dispatched to your email address.</p>
+        <button class="btn btn-primary font-outfit" id="success-close-btn">RETURN TO IEEE JCBUST</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container"></div>
+
+  <!-- CDN Script Loading -->
+  <!-- Three.js (Core 3D WebGL Library) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <!-- GSAP and ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Application Logic JS -->
+  <script src="app.js"></script>
+</body>
+</html>
