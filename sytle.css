@@ -966,6 +966,10 @@ html.low-tier .header {
     display: none; /* Save space on small mobiles */
   }
 
+  .scroll-indicator {
+    display: none; /* Hide scroll indicator on mobile */
+  }
+
   .hero-buttons {
     flex-direction: column;
     width: 100%;
