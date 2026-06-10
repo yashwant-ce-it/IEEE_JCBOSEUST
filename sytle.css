@@ -913,7 +913,7 @@ html.low-tier .hero-section {
 html.low-tier .hero-content {
   align-items: center;
   display: flex;
-  flex-column: column;
+  flex-direction: column;
 }
 
 html.low-tier .hero-buttons {
