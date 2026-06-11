@@ -600,55 +600,6 @@ body, html {
   transform: translateY(-3px);
 }
 
-/* 7. Cinematic Video Intro & Preloader */
-#intro-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: #000000;
-  z-index: 1000;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  pointer-events: auto;
-}
-
-#intro-video {
-  position: absolute;
-  top: -12.5%;
-  left: -12.5%;
-  width: 125% !important;
-  height: 125% !important;
-  max-width: none !important;
-  max-height: none !important;
-  object-fit: cover;
-}
-
-#skip-intro-btn {
-  position: absolute;
-  bottom: 2.5rem;
-  right: 2.5rem;
-  z-index: 1010;
-  background: transparent;
-  border: none;
-  color: #71717a; /* zinc-500 equivalent */
-  font-family: var(--font-title);
-  font-size: 0.75rem; /* text-xs */
-  letter-spacing: 0.25em;
-  cursor: pointer;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-  pointer-events: auto;
-}
-
-#skip-intro-btn:hover {
-  color: #ffffff;
-  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
-}
-
-
 /* 8. Registration Modal */
 #modal-container {
   position: fixed;
@@ -996,3 +947,20 @@ html.low-tier .header {
     padding: 1.5rem;
   }
 }
+
+/* Fix excessive vertical spacing on mobile desktop site / portrait viewports / touchscreen devices */
+@media (orientation: portrait), (pointer: coarse) {
+  .scroll-section {
+    min-height: clamp(500px, 80vh, 850px);
+  }
+  .hero-section {
+    padding-top: 10vh;
+  }
+}
+
+@media (pointer: coarse) {
+  .scroll-indicator {
+    display: none !important;
+  }
+}
+

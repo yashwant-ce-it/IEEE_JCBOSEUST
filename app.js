@@ -53,28 +53,20 @@
       return;
     }
     
-    // Start Cinematic Intro & background WebGL compilation sequence
-    runCinematicIntro();
+    // Start entry reveal & background WebGL compilation sequence
+    runEntryReveal();
   });
 
   // 3. Low-Tier Gating Fallback
   function bypassToStatic() {
-    const introContainer = document.getElementById('intro-container');
-    if (introContainer) introContainer.classList.add('hidden');
-    
     // Set active link tracking on scroll for normal 2D layout
     setupScrollNavigation();
     setupModalHandlers();
   }
 
-  // 4. Cinematic Video Intro & Background Preloading
-  function runCinematicIntro() {
-    const video = document.getElementById('intro-video');
-    const skipBtn = document.getElementById('skip-intro-btn');
-    const introContainer = document.getElementById('intro-container');
-    let introFinished = false;
-
-    // A. Set initial state of 2D DOM elements for smooth staggered GSAP reveal later
+  // 4. Entry Reveal Animation & Background Preloading
+  function runEntryReveal() {
+    // A. Set initial state of 2D DOM elements for smooth staggered GSAP reveal
     gsap.set('.header', { opacity: 0 });
     gsap.set('.hero-tagline', { opacity: 0, y: 20 });
     gsap.set('.hero-title', { opacity: 0, y: 30 });
@@ -82,126 +74,61 @@
     gsap.set('.hero-buttons', { opacity: 0, y: 15 });
     gsap.set('.scroll-indicator', { opacity: 0 });
 
-    // B. Immediately boot WebGL Scene in the background while video is playing
-    // This allows Three.js parallel compilation of shaders and setup
+    // B. Immediately boot WebGL Scene
     initWebGL();
     setupScrollTrigger();
     setupScrollNavigation();
     setupModalHandlers();
     animate();
 
-    // C. Safety Fallback: 9-second timeout to prevent getting locked on a black screen
-    const safetyTimeout = setTimeout(() => {
-      console.warn("Cinematic Intro: Safety fallback triggered. Video took too long or was blocked. Bypassing.");
-      completeIntro(false);
-    }, 9000);
+    // C. Staggered reveal of 2D DOM elements on load
+    const delayOffset = 0.2;
 
-    // C2. Start programmatically playing the cinematic intro video
-    if (video) {
-      video.play().catch(err => {
-        console.warn("Autoplay block prevention: video playback needs user interaction or has been deferred.", err);
-      });
-    }
+    gsap.to('.header', {
+      opacity: 1,
+      duration: 1.0,
+      delay: delayOffset,
+      ease: 'power2.out'
+    });
 
-    // Function to trigger fade out sequence & staggered reveal
-    const completeIntro = (isSkip) => {
-      if (introFinished) return;
-      introFinished = true;
+    gsap.to('.hero-tagline', {
+      opacity: 1,
+      y: 0,
+      duration: 1.0,
+      delay: delayOffset + 0.1,
+      ease: 'power2.out'
+    });
 
-      // Clear safety timeout
-      clearTimeout(safetyTimeout);
+    gsap.to('.hero-title', {
+      opacity: 1,
+      y: 0,
+      duration: 1.0,
+      delay: delayOffset + 0.2,
+      ease: 'power2.out'
+    });
 
-      // Pause the video immediately if skipped to free up processing/RAM
-      if (isSkip && video) {
-        try {
-          video.pause();
-        } catch (e) {
-          console.warn("Could not pause video: ", e);
-        }
-      }
+    gsap.to('.hero-desc', {
+      opacity: 1,
+      y: 0,
+      duration: 1.0,
+      delay: delayOffset + 0.3,
+      ease: 'power2.out'
+    });
 
-      // Smooth fade out of the intro layer container using GSAP
-      gsap.to(introContainer, {
-        opacity: 0,
-        duration: isSkip ? 0.8 : 1.5,
-        ease: isSkip ? 'power2.out' : 'power2.inOut',
-        onComplete: () => {
-          // Entirely remove the intro layer from the DOM tree (Unmount to release video RAM/Memory)
-          if (introContainer) {
-            introContainer.remove();
-          }
-          console.log("Cinematic Intro: Container removed from DOM. Video RAM cleared.");
-        }
-      });
+    gsap.to('.hero-buttons', {
+      opacity: 1,
+      y: 0,
+      duration: 1.0,
+      delay: delayOffset + 0.4,
+      ease: 'power2.out'
+    });
 
-      // Staggered reveal of 2D DOM elements (starts right as video fades)
-      const delayOffset = isSkip ? 0.1 : 0.5;
-
-      gsap.to('.header', {
-        opacity: 1,
-        duration: 1.0,
-        delay: delayOffset,
-        ease: 'power2.out'
-      });
-
-      gsap.to('.hero-tagline', {
-        opacity: 1,
-        y: 0,
-        duration: 1.0,
-        delay: delayOffset + 0.1,
-        ease: 'power2.out'
-      });
-
-      gsap.to('.hero-title', {
-        opacity: 1,
-        y: 0,
-        duration: 1.0,
-        delay: delayOffset + 0.2,
-        ease: 'power2.out'
-      });
-
-      gsap.to('.hero-desc', {
-        opacity: 1,
-        y: 0,
-        duration: 1.0,
-        delay: delayOffset + 0.3,
-        ease: 'power2.out'
-      });
-
-      gsap.to('.hero-buttons', {
-        opacity: 1,
-        y: 0,
-        duration: 1.0,
-        delay: delayOffset + 0.4,
-        ease: 'power2.out'
-      });
-
-      gsap.to('.scroll-indicator', {
-        opacity: 1,
-        duration: 1.0,
-        delay: delayOffset + 0.6,
-        ease: 'power2.out'
-      });
-    };
-
-    // D. Event listeners for end of video, errors, and skip action
-    if (video) {
-      video.addEventListener('ended', () => {
-        completeIntro(false);
-      });
-
-      video.addEventListener('error', (e) => {
-        console.warn("Cinematic Intro: Video error occurred. Details:", video.error);
-        completeIntro(false);
-      });
-    }
-
-    if (skipBtn) {
-      skipBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        completeIntro(true);
-      });
-    }
+    gsap.to('.scroll-indicator', {
+      opacity: 1,
+      duration: 1.0,
+      delay: delayOffset + 0.6,
+      ease: 'power2.out'
+    });
   }
 
   // 5. Initialize WebGL Scene
@@ -245,7 +172,6 @@
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('click', onCanvasClick);
-    window.addEventListener('touchstart', onTouchStart, { passive: true });
   }
 
   // 6. Create Procedural Cyber Geometry
@@ -490,6 +416,10 @@
 
   // 9. Canvas Interaction & Raycasting (Hover / Click meshes)
   function handlePointerMove(clientX, clientY) {
+    // Skip hover scaling/opacity effects on touchscreen devices to prevent stuck states
+    const isTouch = window.matchMedia('(pointer: coarse)').matches;
+    if (isTouch) return;
+
     // Map coords to normalized device coords (-1 to +1)
     mouse.x = (clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(clientY / window.innerHeight) * 2 + 1;
@@ -537,12 +467,6 @@
     handlePointerMove(event.clientX, event.clientY);
   }
 
-  function onTouchStart(event) {
-    if (event.touches && event.touches.length > 0) {
-      handlePointerMove(event.touches[0].clientX, event.touches[0].clientY);
-    }
-  }
-
   function resetHover() {
     if (currentHovered) {
       const resetGroup = currentHovered;
@@ -566,9 +490,30 @@
     }
   }
 
-  function onCanvasClick() {
-    if (currentHovered && isRendering) {
-      openRegistrationModal(currentHovered.userData.zoneName);
+  function onCanvasClick(event) {
+    // Ignore clicks/taps on UI overlays, cards, headers, buttons or forms
+    if (event.target.closest('a, button, input, select, textarea, .glass-card, #modal-container')) {
+      return;
+    }
+
+    if (!isRendering) return;
+
+    // Perform an active, precise raycast on click to see if they clicked a mesh
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    
+    let intersects = [];
+    interactiveObjects.forEach(group => {
+      const hits = raycaster.intersectObjects(group.children, true);
+      if (hits.length > 0) {
+        intersects.push(group);
+      }
+    });
+
+    if (intersects.length > 0) {
+      openRegistrationModal(intersects[0].userData.zoneName);
     }
   }
 
